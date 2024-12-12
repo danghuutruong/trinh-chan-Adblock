@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adblock Detection</title>
+    <style>
+        .adblock-warning {
+            max-width: 900px; 
+            margin: 20px; 
+            padding: 20px;
+            background: linear-gradient(135deg, #ffcccc, #ffe5e5);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            color: #333;
+            font-family: Arial, sans-serif;
+            text-align: left; 
+        }
+        .adblock-warning h2 {
+            color: #d32f2f;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .adblock-warning p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .adblock-warning a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #d32f2f;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        .adblock-warning a:hover {
+            background-color: #b71c1c;
+        }
+        @media (max-width: 768px) {
+            .adblock-warning {
+                padding: 15px;
+            }
+            .adblock-warning h2 {
+                font-size: 1.25rem;
+            }
+            .adblock-warning p {
+                font-size: 0.9rem;
+            }
+            .adblock-warning a {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="main"></div>
+
+    <script>
+        (function() {
+            function showAdblockWarning() {
+                const main = document.getElementById("main");
+                main.innerHTML = `
+                    <div class="adblock-warning">
+                        <h2>Adblock được phát hiện 😔</h2>
+                        <p>Chúng tôi nhận thấy bạn đang sử dụng trình chặn quảng cáo. Điều này có thể ảnh hưởng đến khả năng duy trì trang web.</p>
+                        <p>Vui lòng vô hiệu hóa trình chặn quảng cáo để tiếp tục sử dụng dịch vụ của chúng tôi.</p>
+                        <a href="https://sites.google.com/view/adsvi/" target="_blank">Tham khảo cách tắt Adblock</a>
+                    </div>
+                `;
+                main.style.textAlign = "left"; 
+            }
+
+            const script = document.createElement("script");
+            script.type = "text/javascript";
+            script.async = true;
+            script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+            script.onerror = function() {
+                showAdblockWarning();
+                window.adblock = true;
+            };
+
+            const firstScript = document.getElementsByTagName("script")[0];
+            firstScript.parentNode.insertBefore(script, firstScript);
+        })();
+    </script>
+</body>
+</html>
