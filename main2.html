@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adblock Detection</title>
+    <style>
+        .adblock-warning {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffcc80, #ffe0b2);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            color: #333;
+            font-family: Arial, sans-serif;
+            text-align: left;
+        }
+        .adblock-warning h2 {
+            color: #d84315;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .adblock-warning h2::before {
+            content: "⚠️";
+            font-size: 1.5rem;
+        }
+        .adblock-warning p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .adblock-warning button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #ff7043;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .adblock-warning button:hover {
+            background-color: #d84315;
+            transform: scale(1.05);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            width: 90%;
+            max-width: 600px;
+        }
+        .popup h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .accordion-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .accordion {
+            cursor: pointer;
+            background-color: #f1f1f1;
+            padding: 12px;
+            border: none;
+            outline: none;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            transition: 0.4s ease;
+            border-radius: 5px;
+            width: 100%;
+        }
+        .accordion.active, .accordion:hover {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .panel {
+            padding: 0 15px;
+            display: none;
+            overflow: hidden;
+            background-color: white;
+            border-left: 2px solid #ccc;
+            margin-bottom: 10px;
+            transition: max-height 0.3s ease-out;
+        }
+        .panel img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .close-btn {
+            background-color: #2e7d32;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+            transition: background-color 0.3s;
+        }
+        .close-btn:hover {
+            background-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+    <div id="main"></div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <button class="close-btn" id="closePopup">Đóng</button>
+        <h3>Hướng dẫn tắt trình chặn quảng cáo</h3>
+        <div class="accordion-container">
+            <button class="accordion">Cốc Cốc</button>
+            <div class="panel">
+                <p>Nhấp chuột vào biểu tượng chặn quảng cáo > Nhấp vào nút bật tắt > Nhấn làm mới.</p>
+                <img src="coccoc.gif" alt="Hướng dẫn tắt quảng cáo trên Cốc Cốc">
+            </div>
+            <button class="accordion">Adblock Plus</button>
+            <div class="panel">
+                <p>Nhấp vào biểu tượng Adblock Plus > Tắt chức năng chặn quảng cáo trên trang này > Làm mới trang.</p>
+                <img src="adblockplus.gif" alt="Hướng dẫn tắt quảng cáo trên Adblock Plus">
+            </div>
+            <button class="accordion">Adblock</button>
+            <div class="panel">
+                <p>Nhấp vào biểu tượng Adblock > Chọn "Don’t run on pages on this domain" > Xác nhận và làm mới.</p>
+                <img src="adblock.gif" alt="Hướng dẫn tắt quảng cáo trên Adblock">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            function showAdblockWarning() {
+                const main = document.getElementById("main");
+                main.innerHTML = `
+                    <div class="adblock-warning">
+                        <h2>Adblock được phát hiện</h2>
+                        <p>Chúng tôi nhận thấy bạn đang sử dụng trình chặn quảng cáo. Điều này có thể ảnh hưởng đến khả năng duy trì trang web.</p>
+                        <p>Vui lòng vô hiệu hóa trình chặn quảng cáo để tiếp tục sử dụng dịch vụ của chúng tôi.</p>
+                        <button id="showGuide">Tham khảo cách tắt Adblock</button>
+                    </div>
+                `;
+                const guideButton = document.getElementById("showGuide");
+                guideButton.addEventListener("click", () => {
+                    document.getElementById("popup").style.display = "block";
+                    document.getElementById("overlay").style.display = "block";
+                });
+            }
+
+            document.getElementById("closePopup").addEventListener("click", () => {
+                document.getElementById("popup").style.display = "none";
+                document.getElementById("overlay").style.display = "none";
+            });
+
+            const accordions = document.querySelectorAll(".accordion");
+            accordions.forEach(acc => {
+                acc.addEventListener("click", function() {
+                    accordions.forEach(a => {
+                        if (a !== this) {
+                            a.classList.remove("active");
+                            a.nextElementSibling.style.display = "none";
+                        }
+                    });
+                    this.classList.toggle("active");
+                    const panel = this.nextElementSibling;
+                    panel.style.display = panel.style.display === "block" ? "none" : "block";
+                });
+            });
+
+            const script = document.createElement("script");
+            script.type = "text/javascript";
+            script.async = true;
+            script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+            script.onerror = showAdblockWarning;
+
+            const firstScript = document.getElementsByTagName("script")[0];
+            firstScript.parentNode.insertBefore(script, firstScript);
+        })();
+    </script>
+</body>
+</html>
