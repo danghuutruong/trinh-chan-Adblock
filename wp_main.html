@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adblock Detection</title>
     <style>
-        /* Giao diện thông báo */
         .adblock-warning {
             max-width: 900px;
             margin: 20px auto;
@@ -51,7 +50,6 @@
             transform: scale(1.05);
         }
 
-        /* Popup chi tiết */
         .popup {
             display: none;
             position: fixed;
@@ -81,7 +79,6 @@
             z-index: 999;
         }
 
-        /* Accordion */
         .accordion-container {
             display: flex;
             flex-direction: column;
@@ -137,7 +134,6 @@
 <body>
     <div id="main"></div>
 
-    <!-- Popup và overlay -->
     <div class="overlay" id="overlay"></div>
     <div class="popup" id="popup">
         <button class="close-btn" id="closePopup">Đóng</button>
@@ -180,13 +176,11 @@
                 });
             }
 
-            // Đóng popup
             document.getElementById("closePopup").addEventListener("click", () => {
                 document.getElementById("popup").style.display = "none";
                 document.getElementById("overlay").style.display = "none";
             });
 
-            // Accordion logic
             const accordions = document.querySelectorAll(".accordion");
             accordions.forEach(acc => {
                 acc.addEventListener("click", function() {
